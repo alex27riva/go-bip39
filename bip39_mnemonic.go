@@ -35,12 +35,11 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
 	"golang.org/x/crypto/pbkdf2"
 )
 
-//
 // Constants
-//
 const (
 	// Words number
 	WordsNum12 = 12
@@ -60,9 +59,7 @@ const (
 	seedPbkdf2Round = 2048
 )
 
-//
 // Variables
-//
 var (
 	// ErrWordsNum is returned when trying to generate mnemonic with invalid words number
 	ErrWordsNum = errors.New("The specified words number is not valid for mnemonic generation")
@@ -72,12 +69,12 @@ var (
 	ErrChecksum = errors.New("The checksum of the mnemonic is not valid")
 
 	// Helper map for checking words number validity
-	wordsNumMap = map[int]bool {
-		WordsNum12 : true,
-		WordsNum15 : true,
-		WordsNum18 : true,
-		WordsNum21 : true,
-		WordsNum24 : true,
+	wordsNumMap = map[int]bool{
+		WordsNum12: true,
+		WordsNum15: true,
+		WordsNum18: true,
+		WordsNum21: true,
+		WordsNum24: true,
 	}
 )
 
@@ -135,21 +132,21 @@ func MnemonicFromEntropy(entropy []byte) (*Mnemonic, error) {
 	// Split binary string in groups of 11-bit and map them to the words list
 	for i := 0; i < mnemonicLen; i++ {
 		// Get current word binary string
-		wordStrBin := mnemonicBinStr[i * wordBitLen: (i + 1) * wordBitLen]
+		wordStrBin := mnemonicBinStr[i*wordBitLen : (i+1)*wordBitLen]
 		// Convert to integer
 		wordIdx, _ := strconv.ParseInt(wordStrBin, 2, 16)
 		// Append the correspondent word
 		mnemonic = append(mnemonic, wordsListEn[wordIdx])
 	}
 
-	return &Mnemonic {
+	return &Mnemonic{
 		Words: strings.Join(mnemonic, " "),
 	}, nil
 }
 
 // Create mnemonic object from a mnemonic string.
-func MnemonicFromString(mnemonic string) (*Mnemonic) {
-	return &Mnemonic {
+func MnemonicFromString(mnemonic string) *Mnemonic {
+	return &Mnemonic{
 		Words: mnemonic,
 	}
 }
@@ -275,4 +272,18 @@ func (mnemonic *Mnemonic) getBinaryStrings() (string, string, error) {
 
 	// Split mnemonic
 	return mnemonicBinStr[:chksumIdx], mnemonicBinStr[chksumIdx:], nil
+}
+
+// Brute force the last checksum word
+func FindLastWords(mnemonic string) []string {
+	words := GetWordList()
+	validWords := make([]string, 0, 128)
+
+	for _, word := range words {
+		m := Mnemonic{Words: mnemonic + " " + word}
+		if m.IsValid() {
+			validWords = append(validWords, word)
+		}
+	}
+	return validWords
 }
