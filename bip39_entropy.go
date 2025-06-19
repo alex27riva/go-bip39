@@ -32,9 +32,7 @@ import (
 	"errors"
 )
 
-//
 // Constants
-//
 const (
 	// Entropy bit lengths
 	EntropyBits128 = 128
@@ -44,20 +42,18 @@ const (
 	EntropyBits256 = 256
 )
 
-//
 // Variables
-//
 var (
 	// ErrEntropyBitLen is returned when trying to generate entropy with invalid bit length
 	ErrEntropyBitLen = errors.New("The specified bit length is not valid for entropy generation")
 
 	// Helper map for checking bit length validity
-	entropyBitLenMap = map[int]bool {
-		EntropyBits128 : true,
-		EntropyBits160 : true,
-		EntropyBits192 : true,
-		EntropyBits224 : true,
-		EntropyBits256 : true,
+	entropyBitLenMap = map[int]bool{
+		EntropyBits128: true,
+		EntropyBits160: true,
+		EntropyBits192: true,
+		EntropyBits224: true,
+		EntropyBits256: true,
 	}
 )
 
@@ -74,7 +70,7 @@ func GenerateEntropy(bitLen int) ([]byte, error) {
 	}
 
 	// Generate random entropy
-	entropy := make([]byte, bitLen / 8)
+	entropy := make([]byte, bitLen/8)
 	_, err = rand.Read(entropy)
 	return entropy, err
 }

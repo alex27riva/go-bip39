@@ -35,9 +35,7 @@ import (
 	"strconv"
 )
 
-//
 // Variables
-//
 var (
 	// ErrBinaryString is returned when trying to convert an invalid binary string to byte slice
 	ErrBinaryString = errors.New("The specified binary string is not valid")
@@ -51,7 +49,7 @@ var (
 func bytesToBinaryString(slice []byte) string {
 	// Convert each byte to its bits representation as string
 	var strBuff bytes.Buffer
-	for _, b := range(slice) {
+	for _, b := range slice {
 		strBuff.WriteString(fmt.Sprintf("%.8b", b))
 	}
 
@@ -66,12 +64,12 @@ func binaryStringToBytes(binStr string) ([]byte, error) {
 	}
 
 	// Create slice
-	slice := make([]byte, 0, len(binStr) / 8)
+	slice := make([]byte, 0, len(binStr)/8)
 
 	// Split the string into groups of 8-bit and convert each of them to byte
 	for i := 0; i < len(binStr); i += 8 {
 		// Convert current byte
-		byteStrBin := binStr[i: i + 8]
+		byteStrBin := binStr[i : i+8]
 		byteVal, err := strconv.ParseInt(byteStrBin, 2, 16)
 		// Stop if conversion error
 		if err != nil {
